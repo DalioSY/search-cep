@@ -11,8 +11,13 @@ export function App() {
   async function btSearch() {
     try {
       const res = await api.get(`${input}/json`);
-      setMessage("");
-      setCep(res.data);
+      if (res.data.erro) {
+        setMessage("Esse CEP não existe");
+        setCep({});
+      } else {
+        setMessage("");
+        setCep(res.data);
+      }
       setInput("");
     } catch {
       setMessage("Não foi encontrado, tente novamente");
@@ -28,7 +33,7 @@ export function App() {
           <input
             type="text"
             mask="00000-000"
-            placeholder='Digite o CEP "00000-000"'
+            placeholder="Digite o CEP"
             value={input}
             onChange={(e) => {
               setInput(e.target.value);
@@ -40,10 +45,17 @@ export function App() {
       {message}
       {Object.keys(cep).length > 0 && (
         <section>
-          <p>{cep.cep} </p>
-          <p>{cep.logradouro}</p>
-          <p>{cep.bairro} </p>
           <p>
+            <span>CEP: </span> {cep.cep}
+          </p>
+          <p>
+            <span>Endereço: </span> {cep.logradouro}
+          </p>
+          <p>
+            <span>Bairro: </span> {cep.bairro}
+          </p>
+          <p>
+            <span>Cidade: </span>
             {cep.localidade}-{cep.uf}
           </p>
         </section>
